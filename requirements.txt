@@ -1,0 +1,4 @@
+fire
+pydantic[dotenv]
+requests
+yagmail
