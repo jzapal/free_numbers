@@ -8,8 +8,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    gmail_user: str
-    gmail_password: str
+    email_user: str
+    email_password: str
     send_to: str
 
     class Config:
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-def search_for_terms(number_of_days: int = 30):
+def search_for_numbers(number_of_days: int = 30):
     BASE_URL = 'https://udwola-rez.um.warszawa.pl/pol/queues/190/124'
     today = datetime.date.today()
     for i in range(number_of_days):
@@ -31,16 +31,17 @@ def search_for_terms(number_of_days: int = 30):
             continue
         if not res.content.find(b'brak wolnych'):
             send_notification(date)
+            print(f'Znaleziono termin na {date}!')
             return
-    print('Nie znaleziono wolnych terminów :(')
+    print('Nie znaleziono wolnych numerków :(')
 
 
 def send_notification(date):
-    with yagmail.SMTP(settings.gmail_user, settings.gmail_password) as yag:
-        yag.send(settings.send_to.split(','), "Wolny termin",
-                 f"Pojawił się wolny termin na {date}")
+    with yagmail.SMTP(settings.email_user, settings.email_password) as yag:
+        yag.send(settings.send_to.split(','), "Wolny numerek",
+                 f"Pojawił się wolny numerek na {date}")
 
 
 if __name__ == '__main__':
-    fire.Fire(search_for_terms)
+    fire.Fire(search_for_numbers)
 
