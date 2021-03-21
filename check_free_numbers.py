@@ -29,7 +29,7 @@ def search_for_numbers(number_of_days: int = 30):
         res = requests.get(url)
         if res.status_code != 200:
             continue
-        if not res.content.find(b'brak wolnych') > -1:
+        if res.content.find(b'brak wolnych') > -1:
             send_notification(date)
             print(f'Znaleziono termin na {date}!')
             return
